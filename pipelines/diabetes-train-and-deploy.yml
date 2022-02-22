@@ -99,9 +99,21 @@ jobs:
 #      scriptLocation: inlineScript
 #      scriptType: 'bash'
 #      inlineScript: 'az ml model deploy --name diabetes-preprod-aks --ct ${{ variables.ml_aks_name }} -m Model_diabetes:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(agent.builddirectory)'
+      Contents: '**'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      CleanTargetFolder: true
+      OverWrite: true
+      flattenFolders: true
+      preserveTimestamp: true
+      retryCount: '3'
+      ignoreMakeDirErrors: true
+
   - task: PublishBuildArtifacts@1
     inputs:
-      TargetPath: '/home/vsts/work/1/s/models/diabetes'
+      #TargetPath: '/home/vsts/work/1/s/models/diabetes'
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'diabetes-drop'
       publishLocation: 'Container'
@@ -111,6 +123,11 @@ jobs:
       downloadType: 'specific'
       artifactName: 'diabetes-drop'
       downloadPath: '$(System.ArtifactsDirectory)'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'diabetes-drop'
+      publishLocation: 'Container'
   #- task: DownloadPipelineArtifact@2
   #  continueOnError: true
   #  displayName: 'Download Pipeline Artifacts'
