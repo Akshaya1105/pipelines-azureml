@@ -22,7 +22,7 @@ jobs:
  # Template reference
 
 
-  - script: echo My favorite vegetable is ${{ variables.ml-path }}.
+  - script: echo My favorite vegetable is $(env).
   #- task: AzureCLI@2
   #  displayName: 'Delete deployed service'
   #  inputs:
