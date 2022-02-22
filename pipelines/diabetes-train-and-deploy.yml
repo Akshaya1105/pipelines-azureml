@@ -14,7 +14,7 @@ jobs:
 - job: myJob
   timeoutInMinutes: 1000
   variables:
-  - template: config/var-dev.yml
+  - template: model/diabetes/config/var-dev.yml
   pool:
     vmImage: 'ubuntu latest'
 
