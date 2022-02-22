@@ -7,14 +7,14 @@
  # ml-exp: 'aml_devops' # Experiment name
  # ml-model-name: 'diabetes-model' # Model name
  # ml-aks-name: 'my-aks-9' # AKS cluster name
-variables:
-  - template: config/var-$(env).yml 
+ 
 trigger:
   - master
 jobs:
 - job: myJob
   timeoutInMinutes: 1000
-
+  variables:
+  - template: config/var-$(env).yml
   pool:
     vmImage: 'ubuntu latest'
 
@@ -43,7 +43,7 @@ jobs:
       workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml computetarget create amlcompute -n ${{variables.ml-ct}} --vm-size STANDARD_D2_V2 --max-nodes 1'
+      inlineScript: 'az ml computetarget create amlcompute -n ${{ variables.ml-ct }} --vm-size STANDARD_D2_V2 --max-nodes 1'
     
   - task: AzureCLI@2
     retryCountOnTaskFailure: 5 #default is zero
@@ -54,18 +54,18 @@ jobs:
       workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml run submit-script -c config/train --ct ${{variables.ml-ct}} -e ${{variables.ml-exp}} -t run.json train.py'
+      inlineScript: 'az ml run submit-script -c config/train --ct ${{ variables.ml-ct }} -e ${{ variables.ml-exp }} -t run.json train.py'
 
   # Add potential approval step before registration of model
 
   - task: AzureCLI@2
     displayName: 'Register model'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path  }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml model register -n ${{variables.ml-model-name}} -f run.json --asset-path outputs/ridge_0.95.pkl -t model.json'
+      inlineScript: 'az ml model register -n ${{ variables.ml-model-name }} -f run.json --asset-path outputs/ridge_0.95.pkl -t model.json'
 
  #- task: AzureCLI@2
  #   displayName: 'Deploy model to ACI for QA'
@@ -81,20 +81,20 @@ jobs:
   - task: AzureCLI@2
     displayName: 'Create AKS cluster'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml computetarget create aks --name ${{variables.ml-aks-name}} --cluster-purpose DevTest'
+      inlineScript: 'az ml computetarget create aks --name ${{ variables.ml-aks-name }} --cluster-purpose DevTest'
 
   - task: AzureCLI@2
     displayName: 'Deploy model to AKS for Production'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml model deploy --name diabetes-prod-aks --ct ${{variables.ml-aks-name}} -m diabetes-model:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
+      inlineScript: 'az ml model deploy --name diabetes-prod-aks --ct ${{ variables.ml-aks-name }} -m diabetes-model:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
 
   - task: DownloadPipelineArtifact@2
     inputs:
