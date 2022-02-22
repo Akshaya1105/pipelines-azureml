@@ -100,6 +100,7 @@ jobs:
       inlineScript: 'az ml model deploy --name diabetes-prod-aks --ct ${{ variables.ml_aks_name }} -m diabetes-model:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
 
   - task: DownloadPipelineArtifact@2
+    continueOnError: true
     displayName: 'Download Pipeline Artifacts'
     inputs:
       buildType: 'current'
