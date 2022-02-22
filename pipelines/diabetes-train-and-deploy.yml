@@ -91,6 +91,7 @@ jobs:
 #      inlineScript: 'az ml computetarget create aks --name ${{ variables.ml_aks_name }} --cluster-purpose DevTest'
 
   - task: AzureCLI@2
+    timeoutInMinutes: 1000
     displayName: 'Deploy model to AKS for Production'
     inputs:
       azureSubscription: ${{ variables.ml_ws_connection }}
