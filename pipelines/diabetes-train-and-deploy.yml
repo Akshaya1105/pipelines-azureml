@@ -14,7 +14,7 @@ jobs:
 - job: myJob
   timeoutInMinutes: 1000
   variables:
-  - template: var-test.yml
+  - template: var-dev.yml
   pool:
     vmImage: 'ubuntu latest'
 
@@ -22,7 +22,7 @@ jobs:
  # Template reference
 
 
-  - script: echo My favorite vegetable is ${{ variables.Env_TeamName_AppName }}.
+  - script: echo My favorite vegetable is ${{ variables.ml_path }}.
   #- task: AzureCLI@2
   #  displayName: 'Delete deployed service'
   #  inputs:
