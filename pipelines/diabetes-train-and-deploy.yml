@@ -101,17 +101,24 @@ jobs:
 #      inlineScript: 'az ml model deploy --name diabetes-preprod-aks --ct ${{ variables.ml_aks_name }} -m Model_diabetes:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
   - task: PublishBuildArtifacts@1
     inputs:
+      TargetPath: '/home/vsts/work/1/s/models/diabetes'
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'diabetes-drop'
       publishLocation: 'Container'
-   
-  - task: DownloadPipelineArtifact@2
-    continueOnError: true
-    displayName: 'Download Pipeline Artifacts'
+  - task: DownloadBuildArtifacts@0
     inputs:
       buildType: 'current'
+      downloadType: 'specific'
       artifactName: 'diabetes-drop'
-      targetPath: '$(Pipeline.Workspace)'
+      downloadPath: '$(System.ArtifactsDirectory)'
+  #- task: DownloadPipelineArtifact@2
+  #  continueOnError: true
+  #  displayName: 'Download Pipeline Artifacts'
+  #  inputs:
+  #    buildType: 'current'
+      
+  #    artifactName: 'diabetes-drop'
+  #    targetPath: '$(Pipeline.Workspace)'
 
   
   #- task: AzureCLI@2
