@@ -30,17 +30,17 @@ jobs:
   - task: AzureCLI@2
     displayName: 'Attach folder to workspace'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
-      inlineScript: 'az ml folder attach -w ${{variables.ml-ws}} -g ${{variables.ml-rg}}'
+      inlineScript: 'az ml folder attach -w ${{ variables.ml-ws }} -g ${{ variables.ml-rg }}'
 
   - task: AzureCLI@2
     displayName: 'Create compute for training'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
       inlineScript: 'az ml computetarget create amlcompute -n ${{variables.ml-ct}} --vm-size STANDARD_D2_V2 --max-nodes 1'
@@ -50,8 +50,8 @@ jobs:
     timeoutInMinutes: 1000 # default is 60 mins 
     displayName: 'Train model'
     inputs:
-      azureSubscription: ${{variables.ml-ws-connection}}
-      workingDirectory: ${{variables.ml-path}}
+      azureSubscription: ${{ variables.ml-ws-connection }}
+      workingDirectory: ${{ variables.ml-path }}
       scriptLocation: inlineScript
       scriptType: 'bash'
       inlineScript: 'az ml run submit-script -c config/train --ct ${{variables.ml-ct}} -e ${{variables.ml-exp}} -t run.json train.py'
