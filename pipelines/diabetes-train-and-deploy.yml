@@ -81,14 +81,14 @@ jobs:
 
   # Add potential automated tests
 
-  - task: AzureCLI@2
-    displayName: 'Create AKS cluster'
-    inputs:
-      azureSubscription: ${{ variables.ml_ws_connection }}
-      workingDirectory: ${{ variables.ml_path }}
-      scriptLocation: inlineScript
-      scriptType: 'bash'
-      inlineScript: 'az ml computetarget create aks --name ${{ variables.ml_aks_name }} --cluster-purpose DevTest'
+#  - task: AzureCLI@2
+#    displayName: 'Create AKS cluster'
+#    inputs:
+#      azureSubscription: ${{ variables.ml_ws_connection }}
+#      workingDirectory: ${{ variables.ml_path }}
+#      scriptLocation: inlineScript
+#      scriptType: 'bash'
+#      inlineScript: 'az ml computetarget create aks --name ${{ variables.ml_aks_name }} --cluster-purpose DevTest'
 
   - task: AzureCLI@2
     displayName: 'Deploy model to AKS for Production'
@@ -100,6 +100,7 @@ jobs:
       inlineScript: 'az ml model deploy --name diabetes-prod-aks --ct ${{ variables.ml_aks_name }} -m diabetes-model:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
 
   - task: DownloadPipelineArtifact@2
+    displayName: 'Download Pipeline Artifacts'
     inputs:
       buildType: 'current'
       artifactName: 'diabetes-drop'
