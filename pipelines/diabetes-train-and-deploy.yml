@@ -90,15 +90,15 @@ jobs:
 #      scriptType: 'bash'
 #      inlineScript: 'az ml computetarget create aks --name ${{ variables.ml_aks_name }} --cluster-purpose DevTest'
 
-#  - task: AzureCLI@2
-#    timeoutInMinutes: 1000
-#    displayName: 'Deploy model to AKS for Production'
-#    inputs:
-#      azureSubscription: ${{ variables.ml_ws_connection }}
-#      workingDirectory: ${{ variables.ml_path }}
-#      scriptLocation: inlineScript
-#      scriptType: 'bash'
-#      inlineScript: 'az ml model deploy --name diabetes-preprod-aks --ct ${{ variables.ml_aks_name }} -m Model_diabetes:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
+  - task: AzureCLI@2
+    timeoutInMinutes: 1000
+    displayName: 'Deploy model to AKS for Production'
+    inputs:
+      azureSubscription: ${{ variables.ml_ws_connection }}
+      workingDirectory: ${{ variables.ml_path }}
+      scriptLocation: inlineScript
+      scriptType: 'bash'
+      inlineScript: 'az ml model deploy --name diabetes-preprod-aks --ct ${{ variables.ml_aks_name }} -m Model_diabetes:2 --ic config/inference-config.yml --dc config/deployment-config-aks.yml  --overwrite'
   - task: CopyFiles@2
     inputs:
       SourceFolder: '$(agent.builddirectory)'
