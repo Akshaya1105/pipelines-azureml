@@ -129,11 +129,6 @@ jobs:
       downloadType: 'specific'
       artifactName: 'diabetes-drop'
       downloadPath: '$(System.ArtifactsDirectory)'
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'diabetes-drop'
-      publishLocation: 'Container'
   #- task: DownloadPipelineArtifact@2
   #  continueOnError: true
   #  displayName: 'Download Pipeline Artifacts'
